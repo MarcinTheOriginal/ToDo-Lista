@@ -4,7 +4,7 @@ let $alertInfo;//Powiadomienie o zdarzeniach na stronie
 let $addBtn;
 let $ulList;//Lista zadań
 let $newTask;//Nowy wiersz zadania
-let $notification;//Znikające powiadomienie o dodaniu zadania 
+let $notification;//Timer do znikającego powiadomienia o dodaniu zadania 
 
 const main = () => {
     prepareDOMElements();
@@ -32,16 +32,49 @@ const addNewTask = () => {
         $newTask.textContent = $todoInput.value;
         $ulList.appendChild($newTask);
         $todoInput.value = '';
+
         $alertInfo.classList.remove('hide');
         $alertInfo.style.color = 'green';
         $alertInfo.textContent = 'Dodano nowe zadanie';
-        $notification = setTimeout(() => $alertInfo.classList.add('hide'), 2000);
+
+        $notification = setTimeout(() => $alertInfo.classList.add('hide'), 4000);
+
+        createToolsArea();
     } else {
         $alertInfo.classList.remove('hide');
         $alertInfo.style.color = 'red';
         $alertInfo.textContent = 'Najpierw wpisz treść zadania do wykonania';
+
         clearTimeout($notification);
     }
+};
+
+const createToolsArea = () => {
+    //Stworzenie, dodanie klasy i podłączenie diva do nowego zadania
+    const toolsPanel = document.createElement('div');
+    toolsPanel.classList.add('tools');
+    $newTask.appendChild(toolsPanel);
+    
+    //Stworzenie buttonów
+    const completeBtn = document.createElement('button');
+    const editBtn = document.createElement('button');
+    const deleteBtn = document.createElement('button');
+    
+    //Przypisanie im odpowiednich klas, żeby później się do nich odwoływać
+    completeBtn.classList.add('complete');
+    editBtn.classList.add('edit');
+    deleteBtn.classList.add('delete');
+    
+    //Wpisanie im wyglądu (tick, edit, cross)
+    completeBtn.innerHTML = `<i class="fas fa-check"></i>`;
+    editBtn.innerText = `EDIT`;
+    deleteBtn.innerHTML = `<i class="fas fa-times"></i>`;
+    // innerHTML jest czuły na elementy HTML jak <i itd., a innerText interesuje sie tylko tekstem i omija elementy HTML
+    
+    //Dodanie wygenerowanych elementów do diva, który jest dodawany na końcu li
+    toolsPanel.appendChild(completeBtn);
+    toolsPanel.appendChild(editBtn);
+    toolsPanel.appendChild(deleteBtn);
 };
 
 document.addEventListener('DOMContentLoaded', main); 
