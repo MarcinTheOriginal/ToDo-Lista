@@ -21,8 +21,8 @@ const prepareDOMElements = () => {
 
 //Dodanie akcji do elementów na stronie
 const prepareDOMEvents = () => {
-    $addBtn.addEventListener('click', addNewTask)
-    
+    $addBtn.addEventListener('click', addNewTask);
+    $ulList.addEventListener('click', checkClick);
 };
 
 const addNewTask = () => {
@@ -75,6 +75,19 @@ const createToolsArea = () => {
     toolsPanel.appendChild(completeBtn);
     toolsPanel.appendChild(editBtn);
     toolsPanel.appendChild(deleteBtn);
+};
+
+//W chwili wywoałania addEventListener, event, który w tym przypadku jest 'click' zostaje przekazany jako argument do funkcji, w tym przypadku jest to funkcja checkClick, stąd wiadomo co kryje się za eventem
+const checkClick = (event) => {
+    //Target focusuje się na tym co kliknąłem i sprawdza gdzie jest najbliższy button, który zawiera klasę complete
+    if(event.target.closest('button').classList.contains('complete')) {
+        event.target.closest('li').classList.toggle('completed');
+        event.target.closest('button').classList.toggle('completed');
+    } else if (event.target.closest('button').classList.contains('edit'))  {
+        console.log("edycja");
+    } else {
+        console.log("usuń");
+    }
 };
 
 document.addEventListener('DOMContentLoaded', main); 
