@@ -35,6 +35,7 @@ const prepareDOMElements = () => {
 const prepareDOMEvents = () => {
     $addBtn.addEventListener('click', addNewTask);
     $ulList.addEventListener('click', checkClick);
+    $addPopupBtn.addEventListener('click', changeTodo);
     $closeTodoBtn.addEventListener('click', closePopup);
 };
 
@@ -44,8 +45,8 @@ const addNewTask = () => {
         $idNumber++;
         $newTask = document.createElement('li');
         $newTask.textContent = $todoInput.value;
-        //$newTask.setAttribute = ('id', `todo-${$idNumber}`);//nie działa :(
-        $newTask.id = `todo-${$idNumber}`;
+        $newTask.setAttribute('id', `todo-${$idNumber}`);
+        //$newTask.id = `todo-${$idNumber}`;
         $ulList.appendChild($newTask);
         $todoInput.value = '';
 
@@ -100,21 +101,33 @@ const checkClick = (event) => {
         event.target.closest('li').classList.toggle('completed');
         event.target.closest('button').classList.toggle('completed');
     } else if (event.target.closest('button').classList.contains('edit'))  {
-        editTask(e);
+        editTask(event);
     } else {
         console.log("usuń");
     }
 };
 
-const editTask = () => {
+const editTask = (e) => {
     const oldTodo = e.target.closest('li').id;
     $editedTodo = document.getElementById(oldTodo);
-    $
+    $popupInput.value = $editedTodo.firstChild.data;
     $popup.style.display = 'flex';
+};
+
+const changeTodo = () => {
+    if($popupInput.value !== '') {
+        $editedTodo.firstChild.data = $popupInput.value;
+        closePopup();
+        $popupInfo.classList.add('hide');
+    } else {
+        $popupInfo.classList.remove('hide');
+        $popupInfo.innerText = 'Jak chcesz robić "nic" to żadna todo lista nie jest Ci potrzebna...';
+    };
 };
 
 const closePopup = () => {
     $popup.style.removeProperty('display');
+    $popupInfo.classList.add('hide');
 };
 
 document.addEventListener('DOMContentLoaded', main); 
