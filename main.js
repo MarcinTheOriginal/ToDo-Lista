@@ -5,6 +5,13 @@ let $addBtn;
 let $ulList;//Lista zadań
 let $newTask;//Nowy wiersz zadania
 let $notification;//Timer do znikającego powiadomienia o dodaniu zadania 
+let $popup;
+let $popupInfo;
+let $editedTodo;
+let $popupInput;
+let $addPopupBtn;
+let $closeTodoBtn;
+let $idNumber = 0;
 
 const main = () => {
     prepareDOMElements();
@@ -17,19 +24,28 @@ const prepareDOMElements = () => {
     $alertInfo = document.querySelector('.alertInfo');
     $addBtn = document.querySelector('.addBtn');
     $ulList = document.querySelector('.todoList ul');
+    $popup = document.querySelector('.popup');
+    $popupInfo = document.querySelector('.popupInfo');
+    $popupInput = document.querySelector('.popupInput');
+    $addPopupBtn = document.querySelector('.accept');
+    $closeTodoBtn = document.querySelector('.cancel');
 };
 
 //Dodanie akcji do elementów na stronie
 const prepareDOMEvents = () => {
     $addBtn.addEventListener('click', addNewTask);
     $ulList.addEventListener('click', checkClick);
+    $closeTodoBtn.addEventListener('click', closePopup);
 };
 
 const addNewTask = () => {
     //let notification; Tutaj nie można tego zadeklarować, bo jak dodam zadanie, a potem kliknę dodaj z pustym polem to ta zmienna zostanie zainicjowana na nowo więc nie będę mógł zatrzymać timera uruchomionego za pierwszym razem
     if($todoInput.value !== '') {
+        $idNumber++;
         $newTask = document.createElement('li');
         $newTask.textContent = $todoInput.value;
+        //$newTask.setAttribute = ('id', `todo-${$idNumber}`);//nie działa :(
+        $newTask.id = `todo-${$idNumber}`;
         $ulList.appendChild($newTask);
         $todoInput.value = '';
 
@@ -80,14 +96,25 @@ const createToolsArea = () => {
 //W chwili wywoałania addEventListener, event, który w tym przypadku jest 'click' zostaje przekazany jako argument do funkcji, w tym przypadku jest to funkcja checkClick, stąd wiadomo co kryje się za eventem
 const checkClick = (event) => {
     //Target focusuje się na tym co kliknąłem i sprawdza gdzie jest najbliższy button, który zawiera klasę complete
-    if(event.target.closest('button').classList.contains('complete')) {
+    if (event.target.closest('button').classList.contains('complete')) {
         event.target.closest('li').classList.toggle('completed');
         event.target.closest('button').classList.toggle('completed');
     } else if (event.target.closest('button').classList.contains('edit'))  {
-        console.log("edycja");
+        editTask(e);
     } else {
         console.log("usuń");
     }
+};
+
+const editTask = () => {
+    const oldTodo = e.target.closest('li').id;
+    $editedTodo = document.getElementById(oldTodo);
+    $
+    $popup.style.display = 'flex';
+};
+
+const closePopup = () => {
+    $popup.style.removeProperty('display');
 };
 
 document.addEventListener('DOMContentLoaded', main); 
